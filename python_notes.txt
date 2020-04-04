@@ -14,4 +14,15 @@ my_return_tuple(3):
 LAMBDA
 >>>f = x: x*2
 >>>f(20)
-...40
+40
+
+>>>def compose(func1, func2, y):
+    f = lambda x, f1 = func1, f2 = func2: f1(f2(x))
+    return f(y)
+>>>compose(chr,abs,-65)
+'A'
+
+>>>def list_to_string(list):
+    return reduce(lambda string, item : string + chr(item), list, "")
+>>>list_to_string([1,2,3,4,5])
+"\001\002\003\004\005"
