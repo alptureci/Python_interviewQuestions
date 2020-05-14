@@ -1,0 +1,28 @@
+
+1. All parameters (arguments) in Python are passed by Reference
+
+
+TUPLES
+* Tuples are immutable objects
+* You can return more than 1 value from functions with Tuples
+def my_return_tuple(first_arg):
+    return first_arg, first_arg +5, first_arg*2
+my_return_tuple(3):
+>>> (3,8,6)
+
+
+LAMBDA
+>>>f = x: x*2
+>>>f(20)
+40
+
+>>>def compose(func1, func2, y):
+    f = lambda x, f1 = func1, f2 = func2: f1(f2(x))
+    return f(y)
+>>>compose(chr,abs,-65)
+'A'
+
+>>>def list_to_string(list):
+    return reduce(lambda string, item : string + chr(item), list, "")
+>>>list_to_string([1,2,3,4,5])
+"\001\002\003\004\005"
