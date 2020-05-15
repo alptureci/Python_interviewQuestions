@@ -1,0 +1,1 @@
+make DictionaryClass Singleton, i dont want it to read the dictionary et every instantiation in the future

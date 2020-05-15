@@ -1,10 +1,9 @@
+from itertools import permutations
 
 
-
-
-class DictionaryClass:
+class DictionaryClass(object):
     def __init__(self):
-        self.__letter_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+        self.letter_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
         self.node_dictionary = {}
         self.root_node = DictionaryNode("root", None)
 
@@ -25,9 +24,9 @@ class DictionaryClass:
 
         #print(check_result)
         if (check_result):
-            print("'" + word + "': is in Dictionary")
+            print("'" + ''.join(word) + "': is in Dictionary")
         else:
-            print("'" + word + ": is NOT in Dictionary")
+            print("'" + ''.join(word) + ": is NOT in Dictionary")
 
     def check_dictionary(self, word, node = None):
 
@@ -79,18 +78,34 @@ class DictionaryClass:
             node.next_node_list[letter] = new_node
             self.add_word(new_word, new_node)
 
-    def print_words_given_letter(self, letter_list, node = None):
-        print("yes")
+    def print_words_given_letter(self, letter_list):
+        #print("yes")
         # for all lengths (there may be five letters given
         # but we should accept any three letter combination as well
         # i.e. ([m,a,l,e] --> ale, male, elm, lame,
 
+        #Check if it length is bigger than 3 (I don't care about two letter words)
+        if (len(letter_list) < 3):
+            print("Use more than 3 letters!!")
+            exit() # for testing purposes
+            return False
+
         #let's treat every letter as first letter, then every other letter as second letter, and so on so forth
 
-        if (node == None):
-            node = self.root_node
+        #for now i am going to use itertools for printing the permutation of letters,
+        #in future i may write my own permutation maker for fun.
+        for r in range(3, len(letter_list)+1):
+            #print(r + " letter word possibilities")
+            #list(permutations(letter_list, r)))
+            print(len(list(permutations(letter_list, r))))
+            perms = permutations(letter_list, r)
+            for p in perms:
+                self.is_word_in_dictionary(p)
 
-        for letter in letter_list:
+
+
+
+
 
 
 
@@ -105,11 +120,12 @@ class DictionaryNode:
 if __name__ == "__main__":
     dictionary = DictionaryClass()
 
-    dictionary.read_dictionary_file("/Users/atureci/PycharmProjects/EnglishDictionary/src/sample_dictionary.txt")
+    dictionary.read_dictionary_file("/Users/atureci/PycharmProjects/Python_InterviewQuestions/EnglishDictionary/src/sample_dictionary.txt")
     #dictionary.add_word("word")
     #dictionary.add_test_words()
     dictionary.is_word_in_dictionary("word")
     dictionary.is_word_in_dictionary("wasp")
+    dictionary.print_words_given_letter(['l','a','m','e'])
 
 
 

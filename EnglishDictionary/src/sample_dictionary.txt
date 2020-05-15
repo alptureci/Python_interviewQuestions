@@ -4,3 +4,7 @@ word
 sample
 dictionary
 algorithm
+male
+ale
+pale
+lame
