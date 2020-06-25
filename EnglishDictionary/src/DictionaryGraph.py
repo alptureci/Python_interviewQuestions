@@ -6,6 +6,7 @@ class DictionaryClass(object):
         self.letter_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
         self.node_dictionary = {}
         self.root_node = DictionaryNode("root", None)
+        self.yes_count = 0
 
         for letter in self.letter_list:
             node = DictionaryNode(letter, None)
@@ -25,14 +26,19 @@ class DictionaryClass(object):
         #print(check_result)
         if (check_result):
             print("'" + ''.join(word) + "': is in Dictionary")
-        else:
-            print("'" + ''.join(word) + ": is NOT in Dictionary")
+        #else:
+            #print("'" + ''.join(word) + ": is NOT in Dictionary")
 
     def check_dictionary(self, word, node = None):
 
         if (word == None or len(word) == 0):
-            print("Yes")
-            return True
+            #print("Yes")
+            self.yes_count += 1
+            #return True
+            if (node.is_words_last_letter):
+                return True
+            else:
+                return False
 
         if (node == None):
             node = self.root_node
@@ -44,7 +50,7 @@ class DictionaryClass(object):
             next_node = node.next_node_list.get(letter)
             return self.check_dictionary(new_word, next_node)
         else:
-            print("No")
+            #print("No")
             return False
 
     def read_dictionary_file(self, dictionary_file):
@@ -60,12 +66,16 @@ class DictionaryClass(object):
             self.add_word(word)
 
     def add_word(self, word, node = None):
-        #get to the top
-        if (word == None or len(word) == 0):
-            return None
 
         if (node == None):
             node = self.root_node
+
+        #if length = 1 because the last letter is \n
+        if (len(word) == 1):
+            node.is_words_last_letter = True
+            return None
+
+
 
         letter = word[0]
         new_word = word[1:len(word)]
@@ -78,36 +88,32 @@ class DictionaryClass(object):
             node.next_node_list[letter] = new_node
             self.add_word(new_word, new_node)
 
-    def print_words_given_letter(self, letter_list):
+    def print_words_given_letter(self, letter_list, min_word_length):
         #print("yes")
         # for all lengths (there may be five letters given
         # but we should accept any three letter combination as well
         # i.e. ([m,a,l,e] --> ale, male, elm, lame,
 
         #Check if it length is bigger than 3 (I don't care about two letter words)
-        if (len(letter_list) < 3):
+        if (len(letter_list) < min_word_length):
             print("Use more than 3 letters!!")
             exit() # for testing purposes
             return False
 
-        #let's treat every letter as first letter, then every other letter as second letter, and so on so forth
-
         #for now i am going to use itertools for printing the permutation of letters,
         #in future i may write my own permutation maker for fun.
-        for r in range(3, len(letter_list)+1):
+        for r in range(min_word_length, len(letter_list)+1):
+            self.yes_count = 0
             #print(r + " letter word possibilities")
             #list(permutations(letter_list, r)))
-            print(len(list(permutations(letter_list, r))))
+
+            #print(len(list(perms)))
             perms = permutations(letter_list, r)
-            for p in perms:
+
+            for p in list(perms):
                 self.is_word_in_dictionary(p)
 
-
-
-
-
-
-
+            print(self.yes_count)
 
 class DictionaryNode:
 
@@ -115,22 +121,23 @@ class DictionaryNode:
         self.value = letter
         self.previous_node = previous_node
         self.next_node_list = {}
+        self.is_words_last_letter = False
 
 
 if __name__ == "__main__":
     dictionary = DictionaryClass()
 
-    dictionary.read_dictionary_file("/Users/atureci/PycharmProjects/Python_InterviewQuestions/EnglishDictionary/src/sample_dictionary.txt")
+    dictionary.read_dictionary_file("/Users/atureci/PycharmProjects/Python_InterviewQuestions/EnglishDictionary/src/words_alpha.txt")
+    #dictionary.read_dictionary_file("/Users/atureci/PycharmProjects/Python_InterviewQuestions/EnglishDictionary/src/sample_dictionary.txt")
+
     #dictionary.add_word("word")
     #dictionary.add_test_words()
-    dictionary.is_word_in_dictionary("word")
-    dictionary.is_word_in_dictionary("wasp")
-    dictionary.print_words_given_letter(['l','a','m','e'])
-
-
-
-
-    #print(dictionary.index('j'))
-
-
-
+    #dictionary.is_word_in_dictionary("male")
+    #dictionary.is_word_in_dictionary("wasp")
+    while (True):
+        letter_sequence = input("input letter sequence: \n")
+        min_size = int(input("input min size: \n"))
+        dictionary.print_words_given_letter(letter_sequence, min_size)
+    #dictionary.print_words_given_letter("hbrius", 5)
+    #dictionary.print_words_given_letter(['g','e','m','r','u','o'])
+    #print("yes count: " + str(dictionary.yes_count))
